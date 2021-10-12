@@ -1,0 +1,15 @@
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.rnwireguard">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application>
+        <service
+            android:name="com.rnwireguard.WGVpnService"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>
