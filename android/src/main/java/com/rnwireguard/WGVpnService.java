@@ -14,7 +14,6 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.facebook.drawee.BuildConfig;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.wireguard.android.backend.Backend;
@@ -22,7 +21,7 @@ import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.backend.Statistics;
 import com.wireguard.android.backend.Tunnel;
 import com.wireguard.android.backend.WgQuickBackend;
-import com.wireguard.android.util.ModuleLoader;
+//import com.wireguard.android.util.`;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 import com.wireguard.config.Config;
@@ -44,7 +43,6 @@ public class WGVpnService extends VpnService implements WGVpnServiceCallbacks {
     private RNWireguardCallbacks rnmodule;
     private IBinder binder = new LocalBinder();
     private Backend backend;
-    private ModuleLoader moduleLoader;
     private RootShell rootShell;
     private ToolsInstaller toolsInstaller;
     private boolean didStartRootShell = false;
@@ -202,49 +200,24 @@ public class WGVpnService extends VpnService implements WGVpnServiceCallbacks {
 
     private void createBackend() {
         if (backend != null) return;
-        rootShell = new RootShell(this);
-        toolsInstaller = new ToolsInstaller(this, rootShell);
         String abi = "unknown ABI";
         if (Build.SUPPORTED_ABIS.length != 0) {
             abi = Build.SUPPORTED_ABIS[0];
         }
 
-        USER_AGENT = String.format(
-                Locale.ENGLISH,
-                "WireGuard/%s (Android %d; %s; %s; %s %s; %s)",
-                BuildConfig.VERSION_NAME,
-                Build.VERSION.SDK_INT,
-                Build.BOARD,
-                abi,
-                Build.MANUFACTURER,
-                Build.MODEL,
-                Build.FINGERPRINT
-        );
-        moduleLoader = new ModuleLoader(this, rootShell, USER_AGENT);
+//        USER_AGENT = String.format(
+//                Locale.ENGLISH,
+//                "WireGuard/%s (Android %d; %s; %s; %s %s; %s)",
+//                Build.VERSION_NAME,
+//                Build.VERSION.SDK_INT,
+//                Build.BOARD,
+//                abi,
+//                Build.MANUFACTURER,
+//                Build.MODEL,
+//                Build.FINGERPRINT
+//        );
+
         backend = null;
-        didStartRootShell = false;
-
-        if (!ModuleLoader.isModuleLoaded() && moduleLoader.moduleMightExist()) {
-            try {
-                rootShell.start();
-                didStartRootShell = true;
-                moduleLoader.loadModule();
-            } catch (Exception e) {
-                Log.d("WGQUICK:", e.getMessage());
-            }
-        }
-        if (ModuleLoader.isModuleLoaded()) {
-            try {
-                if (!didStartRootShell) {
-                    rootShell.start();
-                }
-                WgQuickBackend wgQuickBackend = new WgQuickBackend(this, rootShell, toolsInstaller);
-                backend = wgQuickBackend;
-
-            } catch (Exception e) {
-                Log.d("WGQUICK:", e.getMessage());
-            }
-        }
         // Fallback to wg-go if wg-quick is not available
         if (backend == null) {
             backend = new GoBackend(this);
