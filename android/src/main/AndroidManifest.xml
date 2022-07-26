@@ -6,7 +6,7 @@
     <application>
         <service
             android:name="com.rnwireguard.WGVpnService"
-            android:permission="android.permission.BIND_VPN_SERVICE" android:exported="false">
+            android:permission="android.permission.BIND_VPN_SERVICE" android:exported="true">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
