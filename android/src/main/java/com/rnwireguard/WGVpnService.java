@@ -243,7 +243,7 @@ public class WGVpnService extends VpnService implements WGVpnServiceCallbacks {
         }
         Intent pauseVPN = new Intent(this, WGVpnService.class);
         pauseVPN.setAction(PAUSE_VPN);
-        PendingIntent pauseVPNPending = PendingIntent.getService(this, 0, pauseVPN, 0);
+        PendingIntent pauseVPNPending = PendingIntent.getService(this, 0, pauseVPN, PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(
                 this, Constants.NotifChannelID)
                 .setSmallIcon(icon)
@@ -256,7 +256,7 @@ public class WGVpnService extends VpnService implements WGVpnServiceCallbacks {
         if (rnmodule != null) {
             PendingIntent close = PendingIntent.getActivity(rnmodule.getContext(), 0,
                     new Intent(rnmodule.getContext(), rnmodule.getActivity().getClass()),
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             nBuilder.setContentIntent(close);
 
         }
